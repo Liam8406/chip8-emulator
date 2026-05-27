@@ -1,7 +1,9 @@
 #include <iostream>
 #include "chip8.h"
+#include "opcodes.h"
 
-void clear(chip8 &ch8){
+// clear
+void op_0E00(chip8 &ch8){
     for(int i = 0; i < HEIGHT; i++){
         for(int j = 0; j < WIDTH; j++){
             ch8.setPixels(i,j, 0);
@@ -9,23 +11,28 @@ void clear(chip8 &ch8){
     }
 }
 
-void jump(chip8 &ch8, uint16_t NNN){
+// jump
+void op_1NNN(chip8 &ch8, uint16_t NNN){
     ch8.setPC(NNN);
 }
 
-void setVX(chip8 &ch8, uint8_t x, uint8_t NN){
-    ch8.setVX(x, NN);
+// set VX
+void op_6XNN(chip8 &ch8, uint8_t X, uint8_t NN){
+    ch8.setVX(X, NN);
 }
 
-void addVX(chip8 &ch8, uint8_t x, uint8_t NN){
-    ch8.setVX(x,ch8.getVX(x) + NN);
+// add to VX
+void op_7XNN(chip8 &ch8, uint8_t X, uint8_t NN){
+    ch8.setVX(X,ch8.getVX(X) + NN);
 }
 
-void setI(chip8 &ch8, uint16_t NNN){
+// set I
+void op_ANNN(chip8 &ch8, uint16_t NNN){
     ch8.setI(NNN);
 }
 
-void draw(chip8 &ch8, uint8_t X, uint8_t Y, uint8_t N){
+// draw
+void op_DXYN(chip8 &ch8, uint8_t X, uint8_t Y, uint8_t N){
     uint8_t xPOS = ch8.getVX(X) & 63;
     uint8_t yPOS = ch8.getVX(Y) & 31;
 

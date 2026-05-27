@@ -38,8 +38,8 @@ class chip8{
         uint8_t V[16];
         uint16_t opcode;
     public:
-        uint8_t getRAM(uint8_t pos);
-        void setRAM(uint8_t pos, uint8_t val);
+        uint8_t getRAM(uint16_t pos);
+        void setRAM(uint16_t pos, uint8_t val);
         uint8_t getPixels(int x, int y);
         void setPixels(int x, int y, uint8_t val);
         void setPC(uint16_t loc);

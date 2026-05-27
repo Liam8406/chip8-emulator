@@ -13,6 +13,7 @@ Implemented so far:
 - CHIP-8 fontset
 - Registers, stack, PC and index register
 - Opcode fetch cycle
+- Basic opcode decoder
 - Basic opcode implementations
 - 64x32 display buffer
 - XOR sprite drawing

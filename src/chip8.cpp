@@ -1,11 +1,18 @@
 #include "chip8.h"
+#include "opcodes.h"
+#define INST ((opcode & 0xF000) >> 12)
+#define X ((opcode & 0x0F00) >> 8)
+#define Y ((opcode & 0x00F0) >> 4)
+#define N (opcode & 0x000F)
+#define NN (opcode & 0x00FF)
+#define NNN (opcode & 0x0FFF)
 
-uint8_t chip8::getRAM(uint8_t pos)
+uint8_t chip8::getRAM(uint16_t pos)
 {
     return RAM[pos];
 }
 
-void chip8::setRAM(uint8_t pos, uint8_t val)
+void chip8::setRAM(uint16_t pos, uint8_t val)
 {
     RAM[pos] = val;
 }
@@ -55,5 +62,33 @@ void chip8::fetch()
 
 void chip8::decode()
 {
-    return;
+    switch (INST)
+    {
+    // clear
+    case 0:
+        op_00E0(*this);
+        break;
+    // jump
+    case 1:
+        op_1NNN(*this, NNN);
+        break;
+    // set VX
+    case 6:
+        op_6XNN(*this, X, NN);
+        break;
+    // add to VX
+    case 7:
+        op_7XNN(*this, X, NN);
+        break;
+    // set I
+    case 0xA:
+        op_ANNN(*this, NNN);
+        break;
+    // draw
+    case 0xD:
+        op_DXYN(*this, X, Y, N);
+        break;
+    default:
+        break;
+    }
 }
