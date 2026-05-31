@@ -3,10 +3,10 @@
 #include "opcodes.h"
 
 // clear
-void op_0E00(chip8 &ch8){
-    for(int i = 0; i < HEIGHT; i++){
-        for(int j = 0; j < WIDTH; j++){
-            ch8.setPixels(i,j, 0);
+void op_00E0(chip8 &ch8){
+    for(int y = 0; y < HEIGHT; y++){
+        for(int x = 0; x < WIDTH; x++){
+            ch8.setPixels(y,x, 0);
         }
     }
 }
@@ -48,10 +48,10 @@ void op_DXYN(chip8 &ch8, uint8_t X, uint8_t Y, uint8_t N){
             // extract current sprite bit from most significant to least significant bit
             uint8_t currPixel = pixelRow & (0x80 >> j);
             // chip8 sprites are drawn using XOR
-            uint8_t xorPixel = ch8.getPixels(xPOS + j, yPOS + i) ^ currPixel;
+            uint8_t xorPixel = ch8.getPixels(yPOS + i, xPOS + j) ^ currPixel;
             if(!xorPixel && currPixel)
                 ch8.setVX(0xF, 1); // VF flag is set when collision is detected
-            ch8.setPixels(xPOS + j, yPOS + i, xorPixel);
+            ch8.setPixels(yPOS + i, xPOS +j, xorPixel);
         }
     }
 }

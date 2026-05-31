@@ -12,12 +12,15 @@ Implemented so far:
 - 4KB memory
 - CHIP-8 fontset
 - Registers, stack, PC and index register
+- Basic ROM loading
 - Opcode fetch cycle
 - Basic opcode decoder
 - Basic opcode implementations
 - 64x32 display buffer
 - XOR sprite drawing
 - Collision flag handling (VF)
+
+Successfully runs the IBM Logo test ROM in the terminal.
 
 ## Implemented Opcodes
 
