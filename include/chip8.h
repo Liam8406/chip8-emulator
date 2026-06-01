@@ -19,7 +19,9 @@ class chip8{
         uint8_t soundTimer;
         uint8_t V[16];
         uint16_t opcode;
+        bool keys[16];
     public:
+        chip8();
         uint8_t getRAM(uint16_t pos);
         void setRAM(uint16_t pos, uint8_t val);
         uint8_t getPixels(int y, int x);
@@ -28,11 +30,16 @@ class chip8{
         void setPC(uint16_t loc);
         uint16_t getI();
         void setI(uint16_t newI);
+        void pushStack(uint16_t val);
+        uint16_t popStack();
+        uint8_t getDelay();
+        void setDelay(uint8_t val);
+        void setSoundTimer(uint8_t val);
         uint8_t getVX(uint8_t x);
         void setVX(uint8_t x, uint8_t val);
         uint16_t getOpcode();
+        bool getKeyState(uint8_t key);
+        void setKeyState(uint8_t key, bool isPressed);
         void fetch();
         void decode();
-
-
 };
