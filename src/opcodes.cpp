@@ -78,18 +78,21 @@ void op_8XY0(chip8 &ch8, uint8_t X, uint8_t Y)
 void op_8XY1(chip8 &ch8, uint8_t X, uint8_t Y)
 {
     ch8.setVX(X, ch8.getVX(X) | ch8.getVX(Y));
+    ch8.setVX(0xF, 0);
 }
 
 // binary AND
 void op_8XY2(chip8 &ch8, uint8_t X, uint8_t Y)
 {
     ch8.setVX(X, ch8.getVX(X) & ch8.getVX(Y));
+    ch8.setVX(0xF, 0);
 }
 
 // logical XOR
 void op_8XY3(chip8 &ch8, uint8_t X, uint8_t Y)
 {
     ch8.setVX(X, ch8.getVX(X) ^ ch8.getVX(Y));
+    ch8.setVX(0xF, 0);
 }
 
 // add VY to VX
@@ -172,7 +175,7 @@ void op_ANNN(chip8 &ch8, uint16_t NNN){
 // jump with offset
 void op_BNNN(chip8 &ch8, uint16_t NNN)
 {
-    ch8.setI(NNN + ch8.getVX(0));
+    ch8.setPC(NNN + ch8.getVX(0));
 }
 
 // set VX to a random 8 bit number & NN
@@ -198,7 +201,7 @@ void op_DXYN(chip8 &ch8, uint8_t X, uint8_t Y, uint8_t N){
             if(xPOS + j >= 64)
                 break;
             // extract current sprite bit from most significant to least significant bit
-            uint8_t currPixel = pixelRow & (0x80 >> j);
+            uint8_t currPixel = ((pixelRow & (0x80 >> j)) != 0);
             // chip8 sprites are drawn using XOR
             uint8_t xorPixel = ch8.getPixels(yPOS + i, xPOS + j) ^ currPixel;
             if(!xorPixel && currPixel)
@@ -289,8 +292,10 @@ void op_FX33(chip8 &ch8, uint8_t X)
 // store and load memory from V0 - VX in I, I+1 - I+X
 void op_FX55(chip8 &ch8, uint8_t X)
 {
-    for(uint8_t i = 0; i <= X; i++)
+    for(uint8_t i = 0; i <= X; i++){
         ch8.setRAM(ch8.getI() + i, ch8.getVX(i));
+    }
+    ch8.setI(ch8.getI()+X+1);
 }
 
 // store and load memory from I - I+X in V0 - VX
@@ -298,4 +303,5 @@ void op_FX65(chip8 &ch8, uint8_t X)
 {
     for(uint8_t i = 0; i <= X; i++)
         ch8.setVX(i, ch8.getRAM(ch8.getI() + i));
+    ch8.setI(ch8.getI()+X+1);
 }

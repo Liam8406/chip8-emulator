@@ -31,6 +31,21 @@ uint8_t fontset[FONT_SIZE] =
 
 chip8::chip8()
 {
+    for(int i = 0; i < 4096; i++){
+        RAM[i] = 0;
+    }
+    PC = 0x200;
+    I = 0;
+    opcode = 0;
+    delay = 0;
+    soundTimer = 0;
+
+    op_00E0(*this);
+    for(uint8_t i = 0; i < 16; i++)
+    {
+        V[i] = 0;
+        keys[i] = false;
+    }
     for(uint8_t i = 0; i < 0x50; i++)
         RAM[i] = fontset[i];
 }
@@ -53,6 +68,16 @@ uint8_t chip8::getPixels(int y, int x)
 void chip8::setPixels(int y, int x, uint8_t val)
 {
     pixels[y][x] = val;
+}
+
+bool chip8::getDrawFlag()
+{
+    return drawFlag;
+}
+
+void chip8::setDrawFlag(bool flag)
+{
+    drawFlag = flag;
 }
 
 uint16_t chip8::getPC()
@@ -100,6 +125,11 @@ void chip8::setDelay(uint8_t val)
     delay = val;
 }
 
+uint8_t chip8::getSoundTimer()
+{
+    return soundTimer;
+}
+
 void chip8::setSoundTimer(uint8_t val)
 {
     soundTimer = val;
@@ -130,6 +160,14 @@ void chip8::setKeyState(uint8_t key, bool isPressed)
     keys[key] = isPressed;
 }
 
+void chip8::updateTimers()
+{
+    if(delay > 0)
+        delay--;
+    if(soundTimer > 0)
+        soundTimer--;
+}
+
 void chip8::fetch()
 {
     // combine two bytes into one 16 bit opcode
@@ -152,6 +190,7 @@ void chip8::decode()
         // return from subroutine
         case 0xEE:
             op_00EE(*this);
+            break;
         default:
             break;
         }
@@ -236,6 +275,7 @@ void chip8::decode()
         break;
     // jump with offset
     case 0xB:
+        std::cout << std::hex << opcode << std::endl;
         op_BNNN(*this, NNN);
         break;
     // set VX to a random 8 bit number & NN
